@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Cloud mail">
+  <defs>
+    <linearGradient id="bg" x1="60" y1="32" x2="452" y2="480" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2FA8FF"/>
+      <stop offset="1" stop-color="#075BB7"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#000" flood-opacity="0.38"/>
+    </filter>
+  </defs>
+  <rect x="16" y="16" width="480" height="480" rx="112" fill="url(#bg)"/>
+  <g filter="url(#shadow)">
+    <path d="M151 310c-42 0-75-33-75-74 0-37 27-68 63-73 16-48 60-81 112-81 62 0 113 47 119 107 39 6 69 40 69 81 0 45-36 81-82 81H151c-42 0-75-27-75-61 0-29 22-55 53-60" fill="#fff" fill-opacity="0.98"/>
+    <rect x="135" y="226" width="242" height="164" rx="28" fill="#EEF8FF" stroke="#0B65C2" stroke-width="12"/>
+    <path d="m149 244 107 85 107-85" fill="none" stroke="#0B65C2" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="m148 372 75-64m141 64-75-64" fill="none" stroke="#0B65C2" stroke-width="13" stroke-linecap="round"/>
+  </g>
+</svg>

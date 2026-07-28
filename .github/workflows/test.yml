@@ -1,0 +1,64 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: macos-14
+    timeout-minutes: 10
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Reject generated or private artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          unexpected="$(
+            find . -path './.git' -prune -o \
+              -type f \( \
+                -name '*.pyc' -o \
+                -name '.DS_Store' -o \
+                -name '.env' -o \
+                -name '.env.*' -o \
+                -name '*.pem' -o \
+                -name '*.key' -o \
+                -name '*.p12' \
+              \) -print
+          )"
+          if [[ -n "$unexpected" ]]; then
+            echo "Unexpected generated or private files:"
+            echo "$unexpected"
+            exit 1
+          fi
+
+      - name: Validate release boundary
+        run: python3 scripts/validate_release.py
+
+      - name: Run unit tests
+        run: >-
+          python3 -m unittest discover
+          -s plugins/icloud-mail/scripts
+          -p 'test_*.py'
+          -v
+
+      - name: Validate JSON
+        run: |
+          python3 -m json.tool .agents/plugins/marketplace.json >/dev/null
+          python3 -m json.tool plugins/icloud-mail/.codex-plugin/plugin.json >/dev/null
+          python3 -m json.tool plugins/icloud-mail/.mcp.json >/dev/null
+
+      - name: Validate shell entrypoints
+        run: |
+          zsh -n plugins/icloud-mail/setup_keychain.command
+          zsh -n plugins/icloud-mail/scripts/setup_keychain.sh
+          zsh -n plugins/icloud-mail/scripts/remove_keychain.sh

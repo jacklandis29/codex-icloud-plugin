@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "icloud-mail": {
+      "command": "/usr/bin/python3",
+      "args": ["./scripts/icloud_mail_mcp.py"],
+      "cwd": ".",
+      "default_tools_approval_mode": "prompt",
+      "startup_timeout_sec": 20,
+      "tool_timeout_sec": 60
+    }
+  }
+}

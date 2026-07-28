@@ -1,0 +1,12 @@
+interface:
+  display_name: "iCloud Mail"
+  short_description: "Safely search and read iCloud Mail locally"
+  default_prompt: "Use $icloud-mail to summarize important unread messages in my iCloud inbox."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "icloud-mail"
+      description: "Private local read-only access to iCloud Mail"
+      transport: "stdio"
+policy:
+  allow_implicit_invocation: true
