@@ -1,0 +1,20 @@
+{
+  "name": "codex-icloud-plugin",
+  "interface": {
+    "displayName": "Local Mail for Codex"
+  },
+  "plugins": [
+    {
+      "name": "icloud-mail",
+      "source": {
+        "source": "local",
+        "path": "./plugins/icloud-mail"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

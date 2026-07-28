@@ -1,0 +1,42 @@
+{
+  "name": "icloud-mail",
+  "version": "0.1.0",
+  "description": "Unofficial, local-only, read-only access to iCloud Mail through Apple IMAP.",
+  "author": {
+    "name": "Jack Landis",
+    "url": "https://github.com/jacklandis29"
+  },
+  "homepage": "https://github.com/jacklandis29/codex-icloud-plugin",
+  "repository": "https://github.com/jacklandis29/codex-icloud-plugin",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "icloud-mail",
+    "imap",
+    "macos",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "iCloud Mail",
+    "shortDescription": "Read iCloud Mail privately from this Mac.",
+    "longDescription": "An unofficial local integration that searches and reads iCloud Mail using Apple's encrypted IMAP service. Credentials stay in macOS Keychain. The server has no send, delete, archive, attachment tool, telemetry, or arbitrary-network capability, and skips MIME parts identified as attachments.",
+    "developerName": "Jack Landis",
+    "category": "Productivity",
+    "capabilities": [
+      "Local",
+      "Read-only"
+    ],
+    "defaultPrompt": [
+      "Summarize important unread iCloud Mail messages.",
+      "Find recent iCloud Mail from a sender.",
+      "Search my iCloud inbox for a subject."
+    ],
+    "brandColor": "#147CE5",
+    "composerIcon": "./assets/icloud-mail.svg",
+    "logo": "./assets/icloud-mail.svg",
+    "logoDark": "./assets/icloud-mail-dark.svg",
+    "websiteURL": "https://github.com/jacklandis29/codex-icloud-plugin"
+  },
+  "mcpServers": "./.mcp.json"
+}
