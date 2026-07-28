@@ -12,10 +12,12 @@ jobs:
   test:
     runs-on: macos-14
     timeout-minutes: 10
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Reject generated or private artifacts
         shell: bash
@@ -38,15 +40,15 @@ jobs:
             exit 1
           fi
 
+      - name: Validate release boundary
+        run: python3 scripts/validate_release.py
+
       - name: Run unit tests
         run: >-
           python3 -m unittest discover
           -s plugins/icloud-mail/scripts
           -p 'test_*.py'
           -v
-
-      - name: Validate release boundary
-        run: python3 scripts/validate_release.py
 
       - name: Validate JSON
         run: |
