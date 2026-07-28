@@ -126,14 +126,14 @@ def _parse_addresses(value: Optional[str]) -> List[str]:
 def _select_readonly(client: imaplib.IMAP4_SSL, mailbox: str) -> None:
     if not mailbox or any(c in mailbox for c in "\r\n\x00") or len(mailbox) > 512:
         raise SafeError("Invalid mailbox name.")
-    status, _ = client.select(mailbox, readonly=True)
+    status, _ = client.select(_imap_quote(mailbox), readonly=True)
     if status != "OK":
         raise SafeError("The requested mailbox could not be opened read-only.")
 
 
-def _imap_quoted(value: str) -> str:
+def _imap_quote(value: str) -> str:
     if any(c in value for c in "\r\n\x00"):
-        raise SafeError("Search values cannot contain control characters.")
+        raise SafeError("IMAP values cannot contain control characters.")
     return '"' + value.replace("\\", "\\\\").replace('"', '\\"') + '"'
 
 
@@ -163,8 +163,15 @@ def _search_criteria(args: Dict[str, Any]) -> List[str]:
             value = str(value)
             if len(value) > 500:
                 raise SafeError("%s is too long." % key)
-            criteria.extend([imap_key, _imap_quoted(value)])
+            criteria.extend([imap_key, _imap_quote(value)])
     return criteria or ["ALL"]
+
+
+def _search_arguments(args: Dict[str, Any]) -> Tuple[Optional[str], List[Any]]:
+    criteria = _search_criteria(args)
+    if any(not part.isascii() for part in criteria):
+        return "UTF-8", [part.encode("utf-8") for part in criteria]
+    return None, criteria
 
 
 def _extract_fetch_bytes(items: Iterable[Any]) -> bytes:
@@ -432,7 +439,8 @@ def tool_search(args: Dict[str, Any]) -> Dict[str, Any]:
     client = _connect()
     try:
         _select_readonly(client, mailbox)
-        status, data = client.uid("search", None, *_search_criteria(args))
+        charset, criteria = _search_arguments(args)
+        status, data = client.uid("search", charset, *criteria)
         if status != "OK":
             raise SafeError("iCloud Mail search failed.")
         raw_uids = data[0] if data and data[0] else b""

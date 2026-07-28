@@ -98,6 +98,20 @@ class ICloudMailMCPTests(unittest.TestCase):
         )
         self.assertEqual(criteria[:3], ["SINCE", "01-Jul-2026", "UNSEEN"])
         self.assertEqual(criteria[3], "FROM")
+        self.assertEqual(criteria[4], '"person@example.com"')
+
+    def test_search_encodes_non_ascii_criteria_as_utf8(self):
+        charset, criteria = MODULE._search_arguments({"subject": "café"})
+        self.assertEqual(charset, "UTF-8")
+        self.assertEqual(criteria, [b"SUBJECT", b'"caf\xc3\xa9"'])
+
+    def test_select_quotes_mailbox_names(self):
+        client = mock.Mock()
+        client.select.return_value = ("OK", [b"0"])
+        MODULE._select_readonly(client, 'Sent "Team" Messages')
+        client.select.assert_called_once_with(
+            '"Sent \\"Team\\" Messages"', readonly=True
+        )
 
     def test_search_returns_empty_result_when_imap_returns_none(self):
         client = mock.Mock()
@@ -108,7 +122,7 @@ class ICloudMailMCPTests(unittest.TestCase):
         self.assertEqual(result["matches"], 0)
         self.assertEqual(result["returned"], 0)
         self.assertEqual(result["messages"], [])
-        client.select.assert_called_once_with("INBOX", readonly=True)
+        client.select.assert_called_once_with('"INBOX"', readonly=True)
 
     def test_read_rejects_non_numeric_uids_before_network(self):
         with self.assertRaises(MODULE.SafeError):
