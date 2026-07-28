@@ -146,6 +146,8 @@ def validate_public_files() -> None:
         if not path.is_file():
             continue
         relative = path.relative_to(ROOT)
+        if ".git" in relative.parts:
+            continue
         if "__pycache__" in relative.parts:
             fail(f"generated cache directory is present: {relative}")
         if path.name in forbidden_names or path.suffix.lower() in forbidden_suffixes:

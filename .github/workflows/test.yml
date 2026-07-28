@@ -24,15 +24,16 @@ jobs:
         run: |
           set -euo pipefail
           unexpected="$(
-            find . -type f \( \
-              -name '*.pyc' -o \
-              -name '.DS_Store' -o \
-              -name '.env' -o \
-              -name '.env.*' -o \
-              -name '*.pem' -o \
-              -name '*.key' -o \
-              -name '*.p12' \
-            \) -print
+            find . -path './.git' -prune -o \
+              -type f \( \
+                -name '*.pyc' -o \
+                -name '.DS_Store' -o \
+                -name '.env' -o \
+                -name '.env.*' -o \
+                -name '*.pem' -o \
+                -name '*.key' -o \
+                -name '*.p12' \
+              \) -print
           )"
           if [[ -n "$unexpected" ]]; then
             echo "Unexpected generated or private files:"
